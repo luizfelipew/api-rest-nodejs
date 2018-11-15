@@ -27,6 +27,7 @@ app.get('/', function(req, res){
 
 })
 
+// POST (create)
 app.post('/api', function(req, res){
 
     var dados = req.body
@@ -40,6 +41,22 @@ app.post('/api', function(req, res){
                     res.json(records)
                 }
 
+                mongoclient.close()
+            })
+        })
+    })
+})
+
+// GET (read)
+app.get('/api', function(req, res){
+    db.open( function(err, mongoclient){
+        mongoclient.collection('postagens', function(err, collection){
+            collection.find().toArray(function(err, results){
+                if(err){
+                    res.json(err)
+                } else {
+                    res.json(results)
+                }
                 mongoclient.close()
             })
         })
