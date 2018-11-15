@@ -14,7 +14,7 @@ app.listen(port)
 
 var db = new mongodb.Db(
     'instagram',
-    new mongo.Server('localhost', 27017, {}),
+    new mongodb.Server('localhost', 27017, {}),
     {}
 )
 
@@ -31,5 +31,17 @@ app.post('/api', function(req, res){
 
     var dados = req.body
 
-    res.send(dados)
+    db.open( function(err, mongoclient){
+        mongoclient.collection('postagens', function(err, collection){
+            collection.insert(dados, function(err, records){
+                if(err){
+                    res.json(err)
+                } else {
+                    res.json(records)
+                }
+
+                mongoclient.close()
+            })
+        })
+    })
 })
